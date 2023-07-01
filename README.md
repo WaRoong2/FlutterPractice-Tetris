@@ -1,16 +1,12 @@
-# tetris
+# Tetris
+This is a project for practicing Flutter framework.
 
-A new Flutter project.
+I made a famous game, Tetris.
 
-## Getting Started
+There may be some errors that haven't been found yet. I'm sorry:)
 
-This project is a starting point for a Flutter application.
+플러터 프레임워크 연습용 프로젝트입니다.
 
-A few resources to get you started if this is your first Flutter project:
+유명게임 테트리스를 만들어보았습니다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+미처 발견 못한 에러가 있을 수 있습니다. 양해 부탁드립니다:)
