@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:tetris/main.dart';
+import 'package:tetris/tetris_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(TetrisApp());
+    await tester.pumpWidget(TetrisGame());
 
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
