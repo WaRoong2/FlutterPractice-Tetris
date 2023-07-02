@@ -26,6 +26,14 @@ class MainMenuScreen extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+          ),
+        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(image: AssetImage('assets/images/tetrisMenuBackground.png'),fit: BoxFit.fill),

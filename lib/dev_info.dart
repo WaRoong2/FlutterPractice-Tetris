@@ -15,7 +15,7 @@ class InfoScreen extends StatelessWidget {
             children: [
               ListTile(
                 title: Text('Version'),
-                subtitle: Text('1.0.0'),
+                subtitle: Text('1.0.1'),
               ),
               ListTile(
                 title: Text('Date'),

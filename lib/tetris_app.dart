@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 
-import 'package:tetris/main.dart';
-
 class TetrisGame extends StatefulWidget {
 
   @override
@@ -178,7 +176,7 @@ class _TetrisGameState extends State<TetrisGame> {
         // 이동
         if (keepMove) {
           for (int i = currentPieceRow; i < currentPieceRow+currentPiece.length; i++){
-            for (int j = currentPieceColumn+currentPiece[0].length; j > currentPieceColumn-1; j--) {
+            for (int j = currentPieceColumn+currentPiece[0].length-1; j > currentPieceColumn-1; j--) {
               if(grid[i][j]==1 && currentPiece[i-currentPieceRow][j-currentPieceColumn]==1) {
                 grid[i][j] = 0;
                 grid[i][j+1] = 1;
@@ -215,12 +213,17 @@ class _TetrisGameState extends State<TetrisGame> {
       // 돌렸을 때 화면을 벗어나는 경우
       if (currentPieceColumn + newPiece[0].length > columns || currentPieceRow + newPiece.length > rows) {
         keepRotate = false;
-      } else {
-        for (int i = currentPieceRow; i<currentPieceRow+newPiece.length; i++) {
-          for (int j = currentPieceColumn; j<currentPieceColumn+newPiece[0].length; j++) {
-            // 이미 블럭이 있어서 못돌리는 경우
-            if (grid[i][j]==1 && i<currentPieceRow+currentPiece.length && j<currentPieceColumn+currentPiece[0].length && currentPiece[i-currentPieceRow][j-currentPieceColumn]!=1) {
-              keepRotate = false;
+      } else { // 이미 블럭이 있어서 못돌리는 경우
+        for (int i = currentPieceRow; i <
+            currentPieceRow + newPiece.length; i++) {
+          for (int j = currentPieceColumn; j <
+              currentPieceColumn + newPiece[0].length; j++) {
+            if (grid[i][j] == 1) {
+              if (i >= currentPieceRow + currentPiece.length ||
+                  j >= currentPieceColumn + currentPiece[0].length ||
+                  currentPiece[i - currentPieceRow][j - currentPieceColumn] != 1) {
+                keepRotate = false;
+              }
             }
           }
         }
@@ -359,6 +362,14 @@ class _TetrisGameState extends State<TetrisGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+          ),
+        ),
         body: Center(
           child: Row(
             children: [
@@ -375,18 +386,8 @@ class _TetrisGameState extends State<TetrisGame> {
                             textStyle: MaterialStateProperty.all(TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04))
                         ),
                         onPressed: (){
-                          setState(() {
-                            grid = [];
-                            score = 0;
-                            level = 1;
-                            dueTime = 800;
-                          });
-                          initializeGrid();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                              return MainMenuScreen();
-                            }),
-                          );
+                          timer.cancel();
+                          Navigator.pop(context);
                         },
                         child: const Icon(Icons.exit_to_app),
                       ),
@@ -414,7 +415,7 @@ class _TetrisGameState extends State<TetrisGame> {
                 flex: 5,
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text("TETRIS",style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07,fontWeight: FontWeight.bold)),
                       SizedBox(height: MediaQuery.of(context).size.height*0.02),
@@ -449,14 +450,17 @@ class _TetrisGameState extends State<TetrisGame> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: TextButton(
-                              onPressed: rotatePiece,
-                              style: ButtonStyle(
-                                  overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
-                                  splashFactory: NoSplash.splashFactory,
-                                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04))
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height*0.15,
+                              child: TextButton(
+                                onPressed: rotatePiece,
+                                style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
+                                    splashFactory: NoSplash.splashFactory,
+                                    textStyle: MaterialStateProperty.all(TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04))
+                                ),
+                                child: const Icon(Icons.refresh),
                               ),
-                              child: const Icon(Icons.refresh),
                             ),
                           ),
                           Text('Level : $level\nScore : $score',
@@ -468,14 +472,17 @@ class _TetrisGameState extends State<TetrisGame> {
                           ),
                           Expanded(
                             flex: 1,
-                            child: TextButton(
-                              onPressed: updateGrid,
-                              style: ButtonStyle(
-                                  overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
-                                  splashFactory: NoSplash.splashFactory,
-                                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04))
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height*0.15,
+                              child: TextButton(
+                                onPressed: updateGrid,
+                                style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
+                                    splashFactory: NoSplash.splashFactory,
+                                    textStyle: MaterialStateProperty.all(TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04))
+                                ),
+                                child: const Icon(Icons.arrow_downward),
                               ),
-                              child: const Icon(Icons.arrow_downward),
                             ),
                           ),
                         ],
