@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:math';
 
@@ -91,7 +92,7 @@ class _TetrisGameState extends State<TetrisGame> {
     currentPiece = shape[Random().nextInt(7)];
     currentPieceColor = colors[Random().nextInt(7)];
     currentPieceRow = 0;
-    currentPieceColumn = (columns / 2 - currentPiece[0].length / 2).floor();  // 블럭 가장 왼쪽 기준
+    currentPieceColumn = (columns / 2 - currentPiece[0].length / 2).floor()+1;  // 블럭 가장 왼쪽 기준
     for (int i = currentPieceRow; i < currentPieceRow + currentPiece.length; i++){
       for (int j = currentPieceColumn; j < currentPieceColumn + currentPiece[0].length; j++) {
         if (currentPiece[i-currentPieceRow][j-currentPieceColumn]==1) {
@@ -373,12 +374,14 @@ class _TetrisGameState extends State<TetrisGame> {
         body: Center(
           child: Row(
             children: [
+              // 화면 왼쪽 부분
               Expanded(
                 flex: 1,
                 child: Column(
                   children: [
                     Expanded(
                       flex: 1,
+                      // 뒤로 가기 버튼
                       child: TextButton(
                         style: ButtonStyle(
                             overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
@@ -396,6 +399,7 @@ class _TetrisGameState extends State<TetrisGame> {
                       flex: 4,
                       child: SizedBox(),
                     ),
+                    // 블록 왼쪽 이동 화살표
                     Expanded(
                         flex: 5,
                         child: TextButton(
@@ -411,14 +415,17 @@ class _TetrisGameState extends State<TetrisGame> {
                   ],
                 ),
               ),
+              // 테트리스 게임화면
               Expanded(
                 flex: 5,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      // 제목
                       Text("TETRIS",style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07,fontWeight: FontWeight.bold)),
                       SizedBox(height: MediaQuery.of(context).size.height*0.02),
+                      // 칸
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -448,6 +455,7 @@ class _TetrisGameState extends State<TetrisGame> {
                       SizedBox(height: MediaQuery.of(context).size.height*0.02),
                       Row(
                         children: [
+                          // 회전 버튼
                           Expanded(
                             flex: 1,
                             child: SizedBox(
@@ -463,6 +471,7 @@ class _TetrisGameState extends State<TetrisGame> {
                               ),
                             ),
                           ),
+                          // 레벨, 점수 표시
                           Text('Level : $level\nScore : $score',
                             style: TextStyle(
                                 fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -470,6 +479,7 @@ class _TetrisGameState extends State<TetrisGame> {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          // 내리기 버튼
                           Expanded(
                             flex: 1,
                             child: SizedBox(
@@ -486,11 +496,28 @@ class _TetrisGameState extends State<TetrisGame> {
                             ),
                           ),
                         ],
+                      ),
+                      RawKeyboardListener(
+                        focusNode: FocusNode(),
+                        onKey: (RawKeyEvent event) {
+                          if (event is RawKeyDownEvent) {
+                            if (event.logicalKey == LogicalKeyboardKey.arrowUp || event.logicalKey == LogicalKeyboardKey.space) {
+                              rotatePiece();
+                            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                              updateGrid();
+                            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                              moveLeft();
+                            } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+                              moveRight();
+                            } else {}
+                          }
+                        }, child: Container(),
                       )
                     ], // Column을 끝 부분에 정렬
                   ),
                 ),
               ),
+              // 화면 오른쪽 부분
               Expanded(
                 flex: 1,
                 child: Column(
@@ -499,6 +526,7 @@ class _TetrisGameState extends State<TetrisGame> {
                       flex: 1,
                       child: SizedBox(),
                     ),
+                    // 블록 오른쪽 이동 화살표
                     Expanded(
                         flex: 1,
                         child: TextButton(
